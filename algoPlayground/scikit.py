@@ -34,19 +34,30 @@ iris_y_train = iris_y[indices[:-10]]
 iris_X_test = iris_X[indices[-10:]]
 iris_y_test = iris_y[indices[-10:]]
 
-# KKN initializer 
-# hey emily figure out what these mean thanks! 
+## KKN initializer 
+## hey emily figure out what all these params mean thanks! 
 knn = KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
            metric_params=None, n_neighbors=5, p=2,
            weights='uniform')
 
 # training on traingin data 
 knn.fit(iris_X_train, iris_y_train)
+
+# calculate the accuracy!! 
 print(knn.fit(iris_X_train, iris_y_train).score(iris_X_train, iris_y_train))
 
-#prediction
+# prediction based on model
 a = knn.predict(iris_X_test)
 print(a)
-print(iris_y_test)
+print(iris_y_test)	# What it should be! 
+
+
+
+###################################
+# KNN with cross fold validation 
+################################### 
+
+
+
 
 
