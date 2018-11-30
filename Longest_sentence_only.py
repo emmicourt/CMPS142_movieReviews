@@ -26,6 +26,7 @@ def parse_file(file):
     x = list(reader)
     # x is array of arrays
     x.sort(key=lambda x:x[1])
+    # print(x)
     i=0
     z=[]
     y=[]
@@ -42,7 +43,7 @@ def parse_file(file):
         # print(y)
         # i+=1;
         if not isEmpty(x):
-            print('isempty')
+            # print('isempty')
             z.append(y)
             break
         else:
@@ -55,14 +56,14 @@ def parse_file(file):
                     x.pop(i)
                 # i+=1;
                 if not isEmpty(x):
-                    print('whilebreak')
+                    # print('whilebreak')
                     break
 
         z.append(y)
         # print(y)
     # print(z)
     # return z
-    return numpy.array(x)
+    return numpy.array(z)
 
 def parse_pickle(top_commun_path):
     with open(top_commun_path,"rb") as f_p:
@@ -79,6 +80,7 @@ def main(*argv):
         # print train_data
     Longest_Only = parse_file(train_file)
     this_directory = os.getcwd()
+    print(Longest_Only)
     with open(os.path.join(this_directory,"Longest_Only"),'wb') as out:
         pickle.dump(Longest_Only,out)
     # train_data = parse_pickle(args[1])
