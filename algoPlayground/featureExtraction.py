@@ -6,6 +6,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import SGDClassifier
 from sklearn import linear_model
 import nltk
 from nltk import word_tokenize
@@ -59,18 +60,28 @@ data_train_tf = tf_transformer.fit_transform(data_train)
 
 a_train, a_test, b_train, b_test = train_test_split(data_train_tf, data_target, test_size=0.33, random_state=42)
 
-from sklearn.naive_bayes import MultinomialNB
+
+## Naive Bayes 
 #clf = MultinomialNB().fit(a_train.toarray(), b_train).score(a_test, b_test)
-#print(clf)
+#print(clf) # == 0.5730651872399445
 
 
+## KNN 
 #knn = KNeighborsClassifier(algorithm='brute').fit(a_train.toarray(), b_train).score(a_test, b_test)
-#print(knn)
+#print(knn) == 0.5828294036061026
+
+## Logistic Regression 
+#log = linear_model.LogisticRegression(solver='lbfgs', max_iter= 500, multi_class='multinomial')
+#logclf = log.fit(a_train.toarray(), b_train).score(a_test, b_test)
+#print(logclf) == 0.6151456310679612
 
 
-log = linear_model.LogisticRegression(solver='lbfgs', C=1e7, multi_class='multinomial')
-logclf = log.fit(a_train.toarray(), b_train).score(a_test, b_test)
-print(logclf)
+## S
+#sgd = SGDClassifier()
+#sgdclf = sgd.fit(a_train.toarray(), b_train).score(a_test, b_test)
+#print(sgdclf) # ==> 0.5687378640776699
+print(len(dataset))
+
 
 
 
