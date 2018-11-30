@@ -4,7 +4,9 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer 
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import linear_model
 import nltk
 from nltk import word_tokenize
 from nltk import sent_tokenize
@@ -58,11 +60,19 @@ data_train_tf = tf_transformer.fit_transform(data_train)
 a_train, a_test, b_train, b_test = train_test_split(data_train_tf, data_target, test_size=0.33, random_state=42)
 
 from sklearn.naive_bayes import MultinomialNB
-clf = MultinomialNB().fit(a_train, data_y_train)
+#clf = MultinomialNB().fit(a_train.toarray(), b_train).score(a_test, b_test)
+#print(clf)
 
-predicted = clf.predict(data_X_test)
 
-print(predicted)
+#knn = KNeighborsClassifier(algorithm='brute').fit(a_train.toarray(), b_train).score(a_test, b_test)
+#print(knn)
+
+
+log = linear_model.LogisticRegression(solver='lbfgs', C=1e7, multi_class='multinomial')
+logclf = log.fit(a_train.toarray(), b_train).score(a_test, b_test)
+print(logclf)
+
+
 
 
 
