@@ -19,9 +19,11 @@ import os, sys
 import pickle
 import string
 from nltk.corpus import stopwords
+import numpy
+from numpy import sign
 
 emo_dic = {}
-
+subj_dic = {}
 
 def score_emo(text):
     p_file = open("Emotion-Lexicon-Dictionary.p","rb")
@@ -48,19 +50,57 @@ def score_emo(text):
             phrase_data[9] += emo_dic[word]['trust']
         else:
             continue;
-
     for i in range(0,9):
         phrase_data[i] = phrase_data[i] / num_words
     # print(phrase_data)
     return phrase_data
 
 def score_subj(text):
-    return 0
+    p_file = open("subjective_lexicon_dic.p","rb")
+    subj_dic = pickle.load(p_file)
+    # print(emo_dic)
+    p_file.close()
+    # num strongsubj words, number of weak subj words, pos pri words, num of neg pri words, 
+    # generally more pos or neg, generally more strong or weak
+    phrase_data = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
+    for word in text.split(' '):
+        # in order: [strongsubj, weaksubj, +priorpolarity, -priorpolarity] both adds one to both + and -
+        word_data = [0, 0, 0, 0]
+        if word in subj_dic.keys():
+            for key in subj_dic[word]:
+                if subj_dic[word][key]['type'] == 'strongsubj':
+                    word_data[0] += 1
+                    word_data[1] -= 1
+                else:
+                    word_data[0] -= 1
+                    word_data[1] += 1
+                if subj_dic[word][key]['priorpolarity'] == 'both':
+                    word_data[2] += 1
+                    word_data[3] += 1
+                if subj_dic[word][key]['priorpolarity'] == 'negative':
+                    word_data[2] -= 1
+                    word_data[3] += 1
+                else:
+                    word_data[2] += 1
+                    word_data[3] -= 1
+        else:
+            continue;
+        print(word_data)
+        for i in word_data:
+            i = sign(i)
+        for i in range(0,4):
+            phrase_data[i] += word_data[i]
+        phrase_data[4]+= word_data[0]-word_data[1]
+        phrase_data[5]+= word_data[2]-word_data[3]
+    print(phrase_data)
+    phrase_data[4] = sign(phrase_data[4])
+    phrase_data[5] = sign(phrase_data[5])
+    return phrase_data
 # this function goes through the csv line by line and sorts calls the necessary
 # functions to sort the data
 
 if __name__ == "__main__":
-    print(score_emo("foul"))
+    # print(score_subj("foul"))
     # open file
     # csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
 
