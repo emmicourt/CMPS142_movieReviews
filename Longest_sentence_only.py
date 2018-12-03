@@ -1,22 +1,47 @@
 #
 #
-
 import csv
 import sys, os
 import numpy
 import pickle
-
+import nltk
+from nltk import word_tokenize
+import string
+from nltk.corpus import stopwords 
 
 train_file = 'train.csv'
 test_file = 'test.csv'
 
+
+#Initialize text cleaning modules
+lemma = nltk.wordnet.WordNetLemmatizer()
+remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
+stemmer = nltk.stem.porter.PorterStemmer()
+remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
+
 def isEmpty(x):
     if x:
         # print("true")
-        return True;
+        return True
     else:
         # print("false")
-        return False;
+        return False
+
+# this cleans the text by:
+#   putting everything to lowercase
+#   removing punctation
+#   lemmatizing
+#   removing stopwords 
+def clean_text (text):
+    text = text.translate(remove_punctuation_map).lower()
+    stop_words = set(stopwords.words('english')) 
+    word_tokens = word_tokenize(text) 
+    filtered_sentence = [w for w in word_tokens if not w in stop_words] 
+    filtered_sentence = [lemma.lemmatize(word.lower()) 
+        for word in filtered_sentence if word.isalpha()]
+    space = ' '
+    sentence = space.join(filtered_sentence)
+    return sentence
 
 
 # parse the file as a csv file, return an array of the outcome of the file
@@ -60,9 +85,11 @@ def parse_file(file):
                     break
 
         z.append(y)
-        # print(y)
-    # print(z)
-    # return z
+
+    for i,row in enumerate(z):
+        z[i][2] = clean_text(row[2])
+        print(z[i])
+        
     return numpy.array(z)
 
 def parse_pickle(top_commun_path):
