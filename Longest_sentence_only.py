@@ -107,7 +107,7 @@ def main(*argv):
         # print train_data
     Longest_Only = parse_file(train_file)
     this_directory = os.getcwd()
-    print(Longest_Only)
+    # print(Longest_Only)
     with open(os.path.join(this_directory,"Longest_Only"),'wb') as out:
         pickle.dump(Longest_Only,out)
     # train_data = parse_pickle(args[1])

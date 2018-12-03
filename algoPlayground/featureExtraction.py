@@ -1,17 +1,17 @@
 
-import csv
 import numpy as np 
-from sklearn.feature_extraction.text import CountVectorizer 
-from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn import linear_model
+from sklearn.ensemble import VotingClassifier
+from sklearn.naive_bayes import MultinomialNB
+from sklearn import linear_model,svm
 import nltk
-from nltk import word_tokenize
-from nltk import sent_tokenize
+from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords 
+import csv
 import string
 import pickle
 import os, sys
@@ -52,37 +52,20 @@ def process_data(csv_file):
 
 process_data(csv_file)
 
+# this prepares the data to be counted for the tf transformer 
 count_vect = CountVectorizer()
 data_train = count_vect.fit_transform(dataset)
 
+# takes data from prior two lines and creates an actual dictionary and then normalize 
 tf_transformer = TfidfTransformer()
 data_train_tf = tf_transformer.fit_transform(data_train)
 
-a_train, a_test, b_train, b_test = train_test_split(data_train_tf, data_target, test_size=0.33, random_state=42)
-
-
-## Naive Bayes 
-#clf = MultinomialNB().fit(a_train.toarray(), b_train).score(a_test, b_test)
-#print(clf) # == 0.5730651872399445
-
-
-## KNN 
-#knn = KNeighborsClassifier(algorithm='brute').fit(a_train.toarray(), b_train).score(a_test, b_test)
-#print(knn) == 0.5828294036061026
-
-## Logistic Regression 
-#log = linear_model.LogisticRegression(solver='lbfgs', max_iter= 500, multi_class='multinomial')
-#logclf = log.fit(a_train.toarray(), b_train).score(a_test, b_test)
-#print(logclf) == 0.6151456310679612
-
-
-## S
-#sgd = SGDClassifier()
-#sgdclf = sgd.fit(a_train.toarray(), b_train).score(a_test, b_test)
-#print(sgdclf) # ==> 0.5687378640776699
-print(len(dataset))
-
-
+# pickle files
+with open(os.path.join(this_directory,"data_train_tf"),'wb') as out:
+    pickle.dump(data_train_tf, out)
+    
+with open(os.path.join(this_directory,"data_target"),'wb') as out:
+    pickle.dump(data_target, out)
 
 
 
