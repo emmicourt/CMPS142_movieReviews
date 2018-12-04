@@ -28,6 +28,8 @@ remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 dataset = []
 data_target = []
 
+Longest_Only = pickle.load( open( os.path.join(this_directory,"Longest_Only"), "rb" ) )
+
 def clean_text (text):
     text = text.translate(remove_punctuation_map).lower()
     stop_words = set(stopwords.words('english')) 
@@ -52,21 +54,53 @@ def process_data(csv_file):
 
 process_data(csv_file)
 
-# this prepares the data to be counted for the tf transformer 
+# builds a dictionary of features and transforms dataset to feature vectors:
 count_vect = CountVectorizer()
 data_train = count_vect.fit_transform(dataset)
+
+count_vect_ngram = CountVectorizer(ngram_range=(2, 2))
+data_train_ngram =  count_vect_ngram.fit_transform(dataset)
 
 # takes data from prior two lines and creates an actual dictionary and then normalize 
 tf_transformer = TfidfTransformer()
 data_train_tf = tf_transformer.fit_transform(data_train)
+data_train_tf_ngram = tf_transformer.fit_transform(data_train_ngram)
 
-# pickle files
-with open(os.path.join(this_directory,"data_train_tf"),'wb') as out:
-    pickle.dump(data_train_tf, out)
+Longest_Only_train = []
+Longest_Only_target = []
+
+for x in Longest_Only: 
+    Longest_Only_train.append(x[2])
+    Longest_Only_target.append(x[-1])
+
+del Longest_Only_train[-1]
+del Longest_Only_target[-1]
+
+# Now I want to try and implement Co-occurance matrix so I need to create
+## referencing this stackOverflow: https://stackoverflow.com/questions/35562789/word-word-co-occurrence-matrix 
+X = count_vect.fit_transform(Longest_Only_train)
+len(Longest_Only_train), len(Longest_Only_target) = X.shape
+X[X > 0] = 1 # do this line first before computing cooccurrence
+Xc = (X.T * X)
+Xc.setdiag(0)
+print(Xc.todense())
+
+#pickle files
+#with open(os.path.join(this_directory,"data_set"),'wb') as out:
+#    pickle.dump(dataset, out)
+
+#with open(os.path.join(this_directory,"data_train_tf"),'wb') as out:
+#    pickle.dump(data_train_tf, out)
+
+#with open(os.path.join(this_directory,"data_train_tf_ngram"),'wb') as out:
+#    pickle.dump(data_train_tf_ngram, out)
     
-with open(os.path.join(this_directory,"data_target"),'wb') as out:
-    pickle.dump(data_target, out)
+#with open(os.path.join(this_directory,"data_target"),'wb') as out:
+#    pickle.dump(data_target, out)
 
+
+#with open(os.path.join(this_directory,"co_occur_data"),'wb') as out:
+#    pickle.dump(Xc, out)
 
 
 
