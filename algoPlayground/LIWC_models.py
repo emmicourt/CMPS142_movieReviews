@@ -17,11 +17,11 @@ import os, sys
 
 this_directory = os.getcwd()
 
-liwc_dataset = pickle.load( open( os.path.join(this_directory,"LIWC_vector"), "rb" ) )
 
 data_train_tf = pickle.load( open( os.path.join(this_directory,"data_train_tf"), "rb" ) )
 data_target = pickle.load( open( os.path.join(this_directory,"data_target"), "rb" ) )
 
+liwc_dataset = pickle.load( open( os.path.join(this_directory,"LIWC_vector"), "rb" ) )
 liwc_train = []
 liwc_target = [] 
 

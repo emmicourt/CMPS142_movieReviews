@@ -48,7 +48,6 @@ def process_data(csv_file):
 			continue
 		cleaned_text = clean_text(row[2])
 		rating = int(row[3])
-		#row = [cleaned_text, rating]
 		dataset.append(cleaned_text)
 		data_target.append(rating)
 
@@ -66,42 +65,19 @@ tf_transformer = TfidfTransformer()
 data_train_tf = tf_transformer.fit_transform(data_train)
 data_train_tf_ngram = tf_transformer.fit_transform(data_train_ngram)
 
+# pickle files
+with open(os.path.join(this_directory,"data_set"),'wb') as out:
+    pickle.dump(dataset, out)
 
-Longest_Only_train = []
-Longest_Only_target = []
+with open(os.path.join(this_directory,"data_train_tf"),'wb') as out:
+    pickle.dump(data_train_tf, out)
 
-for x in Longest_Only: 
-    Longest_Only_train.append(x[2])
-    Longest_Only_target.append(x[-1])
-
-del Longest_Only_train[-1]
-del Longest_Only_target[-1]
-
-# Now I want to try and implement Co-occurance matrix so I need to create
-## referencing this stackOverflow: https://stackoverflow.com/questions/35562789/word-word-co-occurrence-matrix 
-X = count_vect.fit_transform(Longest_Only_train)
-#len(Longest_Only_train), len(Longest_Only_target) = X.shape
-X[X > 0] = 1 # do this line first before computing cooccurrence
-Xc = (X.T * X)
-Xc.setdiag(0)
-#print(Xc.todense())
-
-#pickle files
-#with open(os.path.join(this_directory,"data_set"),'wb') as out:
-#    pickle.dump(dataset, out)
-
-#with open(os.path.join(this_directory,"data_train_tf"),'wb') as out:
-#    pickle.dump(data_train_tf, out)
-
-#with open(os.path.join(this_directory,"data_train_tf_ngram"),'wb') as out:
-#    pickle.dump(data_train_tf_ngram, out)
+with open(os.path.join(this_directory,"data_train_tf_ngram"),'wb') as out:
+    pickle.dump(data_train_tf_ngram, out)
     
-#with open(os.path.join(this_directory,"data_target"),'wb') as out:
-#    pickle.dump(data_target, out)
+with open(os.path.join(this_directory,"data_target"),'wb') as out:
+    pickle.dump(data_target, out)
 
-
-with open(os.path.join(this_directory,"co_occur_data"),'wb') as out:
-    pickle.dump(Xc, out)
 
 
 
