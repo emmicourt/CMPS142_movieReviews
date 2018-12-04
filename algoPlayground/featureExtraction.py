@@ -66,6 +66,7 @@ tf_transformer = TfidfTransformer()
 data_train_tf = tf_transformer.fit_transform(data_train)
 data_train_tf_ngram = tf_transformer.fit_transform(data_train_ngram)
 
+
 Longest_Only_train = []
 Longest_Only_target = []
 
@@ -79,11 +80,11 @@ del Longest_Only_target[-1]
 # Now I want to try and implement Co-occurance matrix so I need to create
 ## referencing this stackOverflow: https://stackoverflow.com/questions/35562789/word-word-co-occurrence-matrix 
 X = count_vect.fit_transform(Longest_Only_train)
-len(Longest_Only_train), len(Longest_Only_target) = X.shape
+#len(Longest_Only_train), len(Longest_Only_target) = X.shape
 X[X > 0] = 1 # do this line first before computing cooccurrence
 Xc = (X.T * X)
 Xc.setdiag(0)
-print(Xc.todense())
+#print(Xc.todense())
 
 #pickle files
 #with open(os.path.join(this_directory,"data_set"),'wb') as out:
@@ -99,8 +100,8 @@ print(Xc.todense())
 #    pickle.dump(data_target, out)
 
 
-#with open(os.path.join(this_directory,"co_occur_data"),'wb') as out:
-#    pickle.dump(Xc, out)
+with open(os.path.join(this_directory,"co_occur_data"),'wb') as out:
+    pickle.dump(Xc, out)
 
 
 
