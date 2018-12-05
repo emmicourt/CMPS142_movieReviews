@@ -1,5 +1,4 @@
 import numpy as np 
-import sklearn
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.model_selection import train_test_split
@@ -20,7 +19,7 @@ from parse_emo_and_subj import score_emo, score_subj
 
 this_directory = os.getcwd()
 #csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
-csv_file = open(os.path.join(this_directory,'train.csv'),'rt')
+csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
 
 #Initialize text cleaning modules
 lemma = nltk.wordnet.WordNetLemmatizer()
@@ -29,7 +28,7 @@ stemmer = nltk.stem.porter.PorterStemmer()
 remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 
 # get all classifiers 
-clf_tf = pickle.load( open( os.path.join(this_directory,'clf_tf'), "rb" ) )
+clf_tf = pickle.load( open( os.path.join(this_directory,"clf_tf"), "rb" ) )
 clf_ngram = pickle.load( open( os.path.join(this_directory,"clf_ngram"), "rb" ) )
 clf_emo = pickle.load( open( os.path.join(this_directory,"clf_emo"), "rb" ) )
 clf_pos_neg = pickle( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
@@ -37,6 +36,24 @@ clf_pos_neg = pickle( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
 ids = []
 data_tf = [] 
 data_emo = [] 
+
+
+def vote(tf_res,emo_res,ngram_res):
+    result_votes = []
+    for i in range(0,len(emo_res)):
+        # if all are different
+        if tf_res[i] != emo_res[i] and tf_res[i] != ngram_res[i] and emo_res[i] != ngram_res[i]:
+            result_votes.append(tf_res[i])
+        # if tf and emo res are in agreement (or all in agreement)
+        elif tf_res[i] == emo_res[i]:
+            result_votes.append(emo_res[i])
+        # if tf and ngram are in agreement
+        elif tf_res[i] == ngram_res[i]:
+            result_votes.append(ngram_res[i])
+        # if emo and ngram are in agreement
+    else:
+            result_votes.append(ngram_res[i])
+    return result_votes
 
 # cleans the test data 
 def clean_text (text):
@@ -62,20 +79,18 @@ def process_data(csv_file):
 		cleaned_text = clean_text(row[2])
 		phraseId = int(row[0])
 		ids.append(phraseId)
+		
 		emo_vector = score_emo(cleaned_text)
 		subj_vector = score_subj(cleaned_text)
 
-		total_vector = []
-		total_vector.extend(emo_vector)
-		total_vector.extend(subj_vector)
+		#total_vector = []
+		#total_vector.extend(emo_vector)
+		#total_vector.extend(subj_vector)
 		
-		data_emo.append(total_vector)
-		data_tf.append(cleaned_text)
+		#data_emo.append(total_vector)
+		data_tf.append([cleaned_text])
 
 process_data(csv_file)
-
-
-print(data_emo)
 
 #count_vect = CountVectorizer()
 #intput_tf  = count_vect.fit_transform(data_tf)
@@ -92,7 +107,8 @@ print(data_emo)
 # create array of predicted values  
 #tf = clf_tf.predict(test_tfidf.toarray())
 #ngram = clf_ngram.predict(ngram_tfidf.toarray())
-emo = clf_emo.predicted(data_emo)
+#emo = clf_emo.predicted(data_emo)
+
 
 
 
