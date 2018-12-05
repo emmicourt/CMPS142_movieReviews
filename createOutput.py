@@ -18,9 +18,7 @@ import os, sys
 from parse_emo_and_subj import score_emo, score_subj
 
 this_directory = os.getcwd()
-#csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
-csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
-
+csv_file = open(os.path.join(this_directory,"test_1.csv"),"rt")
 
 #Initialize text cleaning modules
 lemma = nltk.wordnet.WordNetLemmatizer()
@@ -137,7 +135,6 @@ def process_data(csv_file):
         cleaned_text = clean_text(row[2])
         phraseId = int(row[0])
         ids.append(phraseId)
-        #print(phraseId)
         
         #emo_vector = score_emo(cleaned_text, emo_dic)
         #subj_vector = score_subj(cleaned_text, subj_dic)
@@ -153,6 +150,7 @@ def process_data(csv_file):
 
 process_data(csv_file)
 
+# creating vectors 
 count_vect = CountVectorizer()
 intput_tf  = count_vect.fit_transform(data_tf)
 
