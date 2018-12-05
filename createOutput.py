@@ -17,11 +17,15 @@ import os, sys
 
 from parse_emo_and_subj import score_emo, score_subj
 
-from generateEntropyFeatures import score_entropy
-
 this_directory = os.getcwd()
 #csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
 csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
+
+#Initialize text cleaning modules
+lemma = nltk.wordnet.WordNetLemmatizer()
+remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
+stemmer = nltk.stem.porter.PorterStemmer()
+remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 
 # get all classifiers 
 clf_tf = pickle.load( open( os.path.join(this_directory,"clf_tf"), "rb" ) )
@@ -58,34 +62,33 @@ def process_data(csv_file):
 		
 		emo_vector = score_emo(cleaned_text)
 		subj_vector = score_subj(cleaned_text)
-		entropy_vector = score_entropy(cleaned_text)
 
-		total_vector = []
-		total_vector.extend(emo_vector)
-		total_vector.extend(subj_vector)
-		total_vector.extend(entropy_vector)
+		#total_vector = []
+		#total_vector.extend(emo_vector)
+		#total_vector.extend(subj_vector)
 		
-		data_emo.append(total_vector)
-		dataset.append(cleaned_text)
+		#data_emo.append(total_vector)
+		data_tf.append([cleaned_text])
 
 # This votes on which label to do 
 # It is weighted by order ie (x has highest weight, then y, follow)
 
+process_data(csv_file)
 
 
 # create array of predicted values  
-tf = clf_tf.predict(dataset)
-ngram = clf_ngram.predict(dataset)
-emo = clf_emo.predicted(data_emo)
+tf = clf_tf.predict(data_tf)
+ngram = clf_ngram.predict(data_tf)
+#emo = clf_emo.predicted(data_emo)
 
-print(predicted_tf)
+print(tf)
 
 # Manually need to vote on these arrays and print to output file. 
-output_csv = open('output_csv','w')
-print >> output_csv, 'PhraseId,Sentiment'
-for i in range(len(ids)): 
-    a vote(tf[i], ngram[i], emo[i])
-    print()
+#output_csv = open('output_csv','w')
+#print >> output_csv, 'PhraseId,Sentiment'
+#for i in range(len(ids)): 
+#    a vote(tf[i], ngram[i], emo[i])
+#    print()
 
 
 

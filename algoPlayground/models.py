@@ -84,12 +84,12 @@ vote_emo = VotingClassifier(estimators=est_emo, voting=‘hard’).fit(emo1_trai
 #.score(vote_emo) # 0.4976470588235294
 
 # pickle files
-with open(os.path.join(this_directory,“clf_tf”),‘wb’) as out:
+with open(os.path.join(this_directory,'clf_tf'),‘wb’) as out:
    pickle.dump(vote_tf, out)
 
-with open(os.path.join(this_directory,“clf_ngram”),‘wb’) as out:
+with open(os.path.join(this_directory,'clf_ngram'),‘wb’) as out:
    pickle.dump(vote_ngram, out)
 
-with open(os.path.join(this_directory,“clf_emo”),‘wb’) as out:
+with open(os.path.join(this_directory,'clf_emo'),‘wb’) as out:
    pickle.dump(vote_emo, out)
 
