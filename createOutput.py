@@ -20,7 +20,8 @@ from parse_emo_and_subj import score_emo, score_subj
 from generateEntropyFeatures import score_entropy
 
 this_directory = os.getcwd()
-csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
+#csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
+csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
 
 # get all classifiers 
 clf_tf = pickle.load( open( os.path.join(this_directory,"clf_tf"), "rb" ) )
@@ -67,14 +68,24 @@ def process_data(csv_file):
 		data_emo.append(total_vector)
 		dataset.append(cleaned_text)
 
+# This votes on which label to do 
+# It is weighted by 
+def vote(x, y, z): 
+
 
 # create array of predicted values  
-predicted_tf = clf_tf.predict(dataset)
-predicted_ngram = clf_ngram.predict(dataset)
-predicted_emo = clf_emo.predicted(data_emo)
+tf = clf_tf.predict(dataset)
+ngram = clf_ngram.predict(dataset)
+emo = clf_emo.predicted(data_emo)
 
+print(predicted_tf)
 
 # Manually need to vote on these arrays and print to output file. 
+output_csv = open('output_csv','w')
+print >> output_csv, 'PhraseId,Sentiment'
+for i in range(len(ids)): 
+    a vote(tf[i], ngram[i], emo[i])
+    print()
 
 
 

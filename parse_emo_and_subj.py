@@ -99,7 +99,7 @@ def score_subj(text):
 # this function goes through the csv line by line and sorts calls the necessary
 # functions to sort the data
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     # print(score_subj("foul"))
     # open file
     # csv_file = open(os.path.join(this_directory,"train.csv"),"rt")

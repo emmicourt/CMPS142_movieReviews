@@ -61,24 +61,24 @@ knnEmo = KNeighborsClassifier().fit(emo1_train, emo2_train)
 log = linear_model.LogisticRegression(solver='lbfgs', max_iter= 500, multi_class='multinomial')
 
 logTf = log.fit(tf1_train.toarray(), tf2_train)
-#print(logTf) # == 0.6230033411140098
+#.score(logTf) # == 0.6230033411140098
 
 logEmo = log.fit(emo1_train, emo2_train)
-#print(logEmo) # == 0.4929411764705882
+#.score(logEmo) # == 0.4929411764705882
 
 ## This Allows us to vote with the different classifiers
 est_tf = [('nbTf', naive_bayes_Tf), ('logTf', logTf)]
 est_ngram = [('nbNgram', naive_bayes_ngram),]
 est_emo = [('nbEmo', naive_bayes_Emo), ('knn', knnEmo), ('logEmo', logEmo)]
 
-vote_tf = VotingClassifier(estimators=est_tf, voting='hard').fit(tf1_train.toarray(), tf2_train).score(tf1_test, tf2_test)
-#print(vote_tf) # 0.6003020733214335
+vote_tf = VotingClassifier(estimators=est_tf, voting='hard').fit(tf1_train.toarray(), tf2_train)
+#.score(vote_tf) # 0.6003020733214335
 
-vote_ngram = VotingClassifier(estimators=est_ngram, voting='hard').fit(ngram1_train.toarray(), ngram2_train).score(ngram1_test, ngram2_test)
-#print(vote_ngram) # 0.585289944619891
+vote_ngram = VotingClassifier(estimators=est_ngram, voting='hard').fit(ngram1_train.toarray(), ngram2_train)
+#.score(vote_ngram) # 0.585289944619891
 
-vote_emo = VotingClassifier(estimators=est_emo, voting='hard').fit(emo1_train, emo2_train).score(emo1_test, emo2_test)
-#print(vote_emo) # 0.4976470588235294
+vote_emo = VotingClassifier(estimators=est_emo, voting='hard').fit(emo1_train, emo2_train)
+#.score(vote_emo) # 0.4976470588235294
 
 # pickle files
 with open(os.path.join(this_directory,"clf_tf"),'wb') as out:
