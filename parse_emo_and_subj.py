@@ -23,16 +23,16 @@ import numpy
 from numpy import sign
 
 this_directory = os.getcwd()
-emo_dic = {}
-subj_dic = {}
+# emo_dic = {}
+# subj_dic = {}
 
-def score_emo(text):
+def score_emo(text, emo_dic):
 
     #p_file = open("Emotion-Lexicon-Dictionary.p","rb")
     #emo_dic = pickle.load(p_file)
 
-    with open(os.path.join(this_directory,'Emotion-Lexicon-Dictionary.p'),"rb") as f_p:
-       emo_dic = pickle.load(f_p, encoding='latin1')
+    # with open(os.path.join(this_directory,'Emotion-Lexicon-Dictionary.p'),"rb") as f_p:
+    #    emo_dic = pickle.load(f_p, encoding='latin1')
 
     # print(emo_dic)
     # p_file.close()
@@ -61,9 +61,9 @@ def score_emo(text):
     # print(phrase_data)
     return phrase_data
 
-def score_subj(text):
-    with open(os.path.join(this_directory,'subjective_lexicon_dic.p'),"rb") as f_p:
-       subj_dic = pickle.load(f_p, encoding='latin1')
+def score_subj(text, subj_dic):
+    # with open(os.path.join(this_directory,'subjective_lexicon_dic.p'),"rb") as f_p:
+    #    subj_dic = pickle.load(f_p, encoding='latin1')
     
     #p_file = open("subjective_lexicon_dic.p","rb")
     #subj_dic = pickle.load(p_file)
@@ -94,13 +94,15 @@ def score_subj(text):
                     word_data[3] -= 1
         else:
             continue;
-        print(word_data)
+        # print(word_data)
+        phrase_data[4]+= word_data[0]-word_data[1]
+        phrase_data[5]+= word_data[2]-word_data[3]
         for i in word_data:
             i = sign(i)
         for i in range(0,4):
             phrase_data[i] += word_data[i]
-        phrase_data[4]+= word_data[0]-word_data[1]
-        phrase_data[5]+= word_data[2]-word_data[3]
+        # phrase_data[4]+= word_data[0]-word_data[1]
+        # phrase_data[5]+= word_data[2]-word_data[3]
     # print(phrase_data)
     phrase_data[4] = sign(phrase_data[4])
     phrase_data[5] = sign(phrase_data[5])

@@ -21,6 +21,7 @@ this_directory = os.getcwd()
 #csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
 csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
 
+
 #Initialize text cleaning modules
 lemma = nltk.wordnet.WordNetLemmatizer()
 remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
@@ -36,6 +37,17 @@ clf_pos_neg = pickle.load( open( os.path.join(this_directory,"clf_pos_neg"), "rb
 ids = []
 data_tf = [] 
 data_emo = [] 
+
+# create files for emo and subj dictionaries
+emo_dic = {}
+subj_dic = {}
+with open(os.path.join(this_directory,'Emotion-Lexicon-Dictionary.p'),"rb") as f_p:
+	emo_dic = pickle.load(f_p, encoding='latin1')
+	f_p.close()
+
+with open(os.path.join(this_directory,'subjective_lexicon_dic.p'),"rb") as f_p:
+	subj_dic = pickle.load(f_p, encoding='latin1')
+	f_p.close()
 
 
 def vote(tf_res,emo_res,ngram_res):
@@ -78,9 +90,9 @@ def process_data(csv_file):
 		cleaned_text = clean_text(row[2])
 		phraseId = int(row[0])
 		ids.append(phraseId)
-		
-		emo_vector = score_emo(cleaned_text)
-		subj_vector = score_subj(cleaned_text)
+		print(phraseId)
+		emo_vector = score_emo(cleaned_text, emo_dic)
+		subj_vector = score_subj(cleaned_text, subj_dic)
 
 		#total_vector = []
 		#total_vector.extend(emo_vector)
