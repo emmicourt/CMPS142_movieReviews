@@ -69,8 +69,8 @@ def process_data(csv_file):
 		dataset.append(cleaned_text)
 
 # This votes on which label to do 
-# It is weighted by 
-def vote(x, y, z): 
+# It is weighted by order ie (x has highest weight, then y, follow)
+
 
 
 # create array of predicted values  
