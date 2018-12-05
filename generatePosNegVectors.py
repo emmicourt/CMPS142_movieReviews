@@ -41,6 +41,16 @@ def clean_text (text):
     sentence = space.join(lemmatized_sentence)
     return sentence
 
+def load_pos_neg():
+    global pos_words
+    global neg_words
+    this_directory = os.getcwd()
+    with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
+        pos_words = pickle.load(f_p, encoding='latin1')
+   
+    with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
+       neg_words = pickle.load(f_p, encoding='latin1')
+
 # treturns a vector or positive and negative
 def score_pos_neg(sentence):
     pos_score = 0
@@ -76,12 +86,7 @@ if __name__ == "__main__":
     pos_neg_vectors = []
     this_directory = os.getcwd()
     
-    with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
-       pos_words = pickle.load(f_p, encoding='latin1')
-       
-    with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
-       neg_words = pickle.load(f_p, encoding='latin1')
-       
+    load_pos_neg()
     
     print(pos_words[5])
     print(neg_words[5])

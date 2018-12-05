@@ -24,11 +24,11 @@ this_directory = os.getcwd()
 # go through line by line
 input_file = open('SentiWords_1.1.txt')
 try:
+    print(input_file)
     for i, line in enumerate(input_file):
         tokens = line.split()
-        word = tokens[0:-2]
+        word = tokens[0][0:-2]
         val = tokens[1]
-        print(type(word))
         sentiment[word]=val
         
 finally:
