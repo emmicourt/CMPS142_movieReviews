@@ -1,5 +1,7 @@
 # cmps142_project
-
+# Emily Bettencourt enbetten@ucsc.edu 1465349 
+# Mia Altieri mgaltier@ucsc.edu 1458683
+# Keenan Yamasaki kyamasak@ucsc.edu 1487504
 
 Purpose:
 ========
@@ -38,17 +40,19 @@ pickel files and processed into usable structures for sklearn. We then use the s
 classifiers to create our models. These models are sustained using pickle files to be used by createOutput.py
 
 createOutput.py
-This file takes in the training data, the models from the pickel files 
+This file uses the models to make predictions on the test data. The three classifiers vote on a prediction
+and write to the 
 
 
 How to run:
 ===========
 1. Create feature vectors and dump into pickle files: 
 	python featureExtraction.py
+	python 
 
 2. Take feature vectors and train: 
 	python models.py
 
 3. Create output prediction file: 
-	python 
+	python createOutput.py 
 
