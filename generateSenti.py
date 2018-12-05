@@ -51,33 +51,18 @@ def load_pos_neg():
     with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
        neg_words = pickle.load(f_p, encoding='latin1')
 
+def load_senti():
+    
+
 # treturns a vector or positive and negative
 def score_pos_neg(sentence):
-    pos_score = 0
-    neg_score = 0
+    score = 0
     
     for word in sentence:
-        if word in pos_words:
-            pos_score +=1
-        if word in neg_words:
-            neg_score +=1
-            
-    p_n_ratio = 0
-    n_p_ratio = 0
-    if neg_score == 0 and pos_score == 0:
-        p_n_ratio = .0000000001
-        n_p_ratio = .0000000001
-    elif neg_score == 0:
-        p_n_ratio = pos_score*pos_score
-        n_p_ratio = .0000000001
-    elif pos_score == 0:
-        p_n_ratio = .0000000001
-        n_p_ratio = neg_score*neg_score
-    else:
-        p_n_ratio = pos_score/neg_score
-        n_p_ratio = neg_score/pos_score
+        if word in senti:
+            score += senti[word] 
     
-    return [pos_score, neg_score, p_n_ratio, n_p_ratio]
+    return score
 
 
 # this main function is used for developer purposes to see how quick the thingy
@@ -86,7 +71,12 @@ if __name__ == "__main__":
     pos_neg_vectors = []
     this_directory = os.getcwd()
     
-    load_pos_neg()
+    with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
+       pos_words = pickle.load(f_p, encoding='latin1')
+       
+    with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
+       neg_words = pickle.load(f_p, encoding='latin1')
+       
     
     print(pos_words[5])
     print(neg_words[5])

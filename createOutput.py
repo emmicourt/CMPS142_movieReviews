@@ -31,12 +31,55 @@ remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 clf_tf = pickle.load( open( os.path.join(this_directory,"clf_tf"), "rb" ) )
 clf_ngram = pickle.load( open( os.path.join(this_directory,"clf_ngram"), "rb" ) )
 clf_emo = pickle.load( open( os.path.join(this_directory,"clf_emo"), "rb" ) )
-clf_pos_neg = pickle( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
+clf_pos_neg = pickle.load( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
 
 ids = []
 data_tf = [] 
 data_emo = [] 
+data_pos_neg = []
 
+
+#-----------------------------------------------------------------------------
+def load_pos_neg():
+    global pos_words
+    global neg_words
+    this_directory = os.getcwd()
+    with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
+        pos_words = pickle.load(f_p, encoding='latin1')
+   
+    with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
+       neg_words = pickle.load(f_p, encoding='latin1')
+
+# treturns a vector or positive and negative
+def score_pos_neg(sentence):
+    pos_score = 0
+    neg_score = 0
+    
+    for word in sentence:
+        if word in pos_words:
+            pos_score +=1
+        if word in neg_words:
+            neg_score +=1
+            
+    p_n_ratio = 0
+    n_p_ratio = 0
+    if neg_score == 0 and pos_score == 0:
+        p_n_ratio = .0000000001
+        n_p_ratio = .0000000001
+    elif neg_score == 0:
+        p_n_ratio = pos_score*pos_score
+        n_p_ratio = .0000000001
+    elif pos_score == 0:
+        p_n_ratio = .0000000001
+        n_p_ratio = neg_score*neg_score
+    else:
+        p_n_ratio = pos_score/neg_score
+        n_p_ratio = neg_score/pos_score
+    
+    return [pos_score, neg_score, p_n_ratio, n_p_ratio]
+
+
+#-----------------------------------------------------------------------------
 
 def vote(tf_res,emo_res,ngram_res):
     result_votes = []
@@ -70,25 +113,27 @@ def clean_text (text):
 # this takes in the test.csv file, cleans text of each instance and puts into appropriate vector lisr
 # is different from
 def process_data(csv_file):
-	reader = csv.reader(csv_file)
-	for idx,row in enumerate(reader):
-		
+    load_pos_neg()
+    reader = csv.reader(csv_file)
+    for idx,row in enumerate(reader):
         if idx == 0:
-			continue
+            continue
+
+        cleaned_text = clean_text(row[2])
+        phraseId = int(row[0])
+        ids.append(phraseId)
 		
-		cleaned_text = clean_text(row[2])
-		phraseId = int(row[0])
-		ids.append(phraseId)
-		
-		emo_vector = score_emo(cleaned_text)
-		subj_vector = score_subj(cleaned_text)
+#		emo_vector = score_emo(cleaned_text)
+#		subj_vector = score_subj(cleaned_text.split())
+        pos_neg_vector = score_pos_neg(cleaned_text.split())
 
 		#total_vector = []
 		#total_vector.extend(emo_vector)
 		#total_vector.extend(subj_vector)
 		
 		#data_emo.append(total_vector)
-		data_tf.append([cleaned_text])
+        data_pos_neg.append(pos_neg_vector)
+        data_tf.append([cleaned_text])
 
 process_data(csv_file)
 
@@ -107,7 +152,8 @@ process_data(csv_file)
 # create array of predicted values  
 #tf = clf_tf.predict(test_tfidf.toarray())
 #ngram = clf_ngram.predict(ngram_tfidf.toarray())
-#emo = clf_emo.predicted(data_emo)
+#emo = clf_emo.predict(data_emo)
+pos_neg = clf_pos_neg.predict(data_pos_neg)
 
 
 
