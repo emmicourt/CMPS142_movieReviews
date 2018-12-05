@@ -18,19 +18,19 @@ import os, sys
 this_directory = os.getcwd()
 
 # Opend the pickle files from frequency metrics
-data_train_tf = pickle.load( open( os.path.join(this_directory,“data_train_tf”), “rb” ) )
-data_train_tf_ngram = pickle.load( open( os.path.join(this_directory,“data_train_tf_ngram”), “rb” ) )
-data_target = pickle.load( open( os.path.join(this_directory,“data_target”), “rb” ) )
-#data_set = pickle.load( open( os.path.join(this_directory,“data_set”), “rb” ) )
+data_train_tf = pickle.load( open( os.path.join(this_directory,'data_train_tf'), 'rb') )
+data_train_tf_ngram = pickle.load( open( os.path.join(this_directory,'data_train_tf_ngram'), 'rb' ) )
+data_target = pickle.load( open( os.path.join(this_directory, 'data_target'), 'rb' ) )
 
 # Open and process emotion data into sklearn usable arrays
-emo_data = pickle.load( open( os.path.join(this_directory,“Data_by_Emo”), “rb” ) ).values()
+emo_data = pickle.load( open( os.path.join(this_directory,'Data_by_Emo'), 'rb') ).values()
 emo_train_data = []
 emo_target = []
 
 for x in emo_data:
     emo_train_data.append(x[0:-1])
     emo_target.append(x[-1])
+
 
 # randomly splitting on the data into test and train set
 tf1_train, tf1_test, tf2_train, tf2_test = train_test_split(data_train_tf, data_target, test_size=0.20, random_state=42)
@@ -57,13 +57,17 @@ knnEmo = KNeighborsClassifier().fit(emo1_train, emo2_train)
 
 
 ## Logistic Regression
-log = linear_model.LogisticRegression(solver=‘lbfgs’, max_iter= 500, multi_class=‘multinomial’)
+log = linear_model.LogisticRegression(solver='lbfgs', max_iter= 500, multi_class='multinomial')
 
 logTf = log.fit(tf1_train.toarray(), tf2_train)
 #.score(logTf) # == 0.6230033411140098
 
 logEmo = log.fit(emo1_train, emo2_train)
 #.score(logEmo) # == 0.4929411764705882
+
+logEntropy = log.fit(tropy1_train, tropy2_train).score(tropy1_test, tropy2_test)
+print(logEntropy) 
+
 
 ## This Allows us to vote with the different classifiers
 est_tf = [(‘nbTf’, naive_bayes_Tf), (‘logTf’, logTf)]
@@ -88,3 +92,4 @@ with open(os.path.join(this_directory,“clf_ngram”),‘wb’) as out:
 
 with open(os.path.join(this_directory,“clf_emo”),‘wb’) as out:
    pickle.dump(vote_emo, out)
+
