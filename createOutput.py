@@ -32,6 +32,7 @@ remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 clf_tf = pickle.load( open( os.path.join(this_directory,'clf_tf'), "rb" ) )
 clf_ngram = pickle.load( open( os.path.join(this_directory,"clf_ngram"), "rb" ) )
 clf_emo = pickle.load( open( os.path.join(this_directory,"clf_emo"), "rb" ) )
+clf_pos_neg = pickle( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
 
 ids = []
 data_tf = [] 
@@ -54,7 +55,8 @@ def clean_text (text):
 def process_data(csv_file):
 	reader = csv.reader(csv_file)
 	for idx,row in enumerate(reader):
-		if idx == 0:
+		
+        if idx == 0:
 			continue
 		
 		cleaned_text = clean_text(row[2])
@@ -72,29 +74,26 @@ def process_data(csv_file):
 
 process_data(csv_file)
 
-count_vect = CountVectorizer()
-intput_tf  = count_vect.fit_transform(data_tf)
 
-tf_transformer = TfidfTransformer()
-test_tfidf = tf_transformer.fit_transform(intput_tf)
+print(data_emo)
 
-count_vect_ngram = CountVectorizer(ngram_range=(2, 2))
-input_ngram =  count_vect_ngram.fit_transform(data_tf)
+#count_vect = CountVectorizer()
+#intput_tf  = count_vect.fit_transform(data_tf)
 
-ngram_tfidf = tf_transformer.fit_transform(input_ngram)
+#tf_transformer = TfidfTransformer()
+#test_tfidf = tf_transformer.fit_transform(intput_tf)
+
+#count_vect_ngram = CountVectorizer(ngram_range=(2, 2))
+#input_ngram =  count_vect_ngram.fit_transform(data_tf)
+
+#ngram_tfidf = tf_transformer.fit_transform(input_ngram)
 
 
 # create array of predicted values  
-tf = clf_tf.predict(test_tfidf.toarray())
-ngram = clf_ngram.predict(ngram_tfidf.toarray())
+#tf = clf_tf.predict(test_tfidf.toarray())
+#ngram = clf_ngram.predict(ngram_tfidf.toarray())
 emo = clf_emo.predicted(data_emo)
 
-# Manually need to vote on these arrays and print to output file. 
-#output_csv = open('output_csv','w')
-#print >> output_csv, 'PhraseId,Sentiment'
-#for i in range(len(ids)): 
-#    a vote(tf[i], ngram[i], emo[i])
-#    print()
 
 
 

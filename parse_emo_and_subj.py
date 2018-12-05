@@ -22,14 +22,20 @@ from nltk.corpus import stopwords
 import numpy
 from numpy import sign
 
+this_directory = os.getcwd()
 emo_dic = {}
 subj_dic = {}
 
 def score_emo(text):
-    p_file = open("Emotion-Lexicon-Dictionary.p","rb")
-    emo_dic = pickle.load(p_file)
+
+    #p_file = open("Emotion-Lexicon-Dictionary.p","rb")
+    #emo_dic = pickle.load(p_file)
+
+    with open(os.path.join(this_directory,'Emotion-Lexicon-Dictionary.p'),"rb") as f_p:
+       emo_dic = pickle.load(f_p, encoding='latin1')
+
     # print(emo_dic)
-    p_file.close()
+    # p_file.close()
     # in order 'anticipation', 'joy', 'negative', 'sadness', 'disgust',
     # 'positive', 'anger', 'surprise', 'fear', 'trust'
     phrase_data = [0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01]
@@ -37,7 +43,7 @@ def score_emo(text):
     for word in text.split(' '):
         num_words += 1
         if word in emo_dic.keys():
-            # print(word)
+            print(word)
             phrase_data[0] += emo_dic[word]['anticipation']
             phrase_data[1] += emo_dic[word]['joy']
             phrase_data[2] += emo_dic[word]['negative']
@@ -56,10 +62,13 @@ def score_emo(text):
     return phrase_data
 
 def score_subj(text):
-    p_file = open("subjective_lexicon_dic.p","rb")
-    subj_dic = pickle.load(p_file)
+    with open(os.path.join(this_directory,'subjective_lexicon_dic.p'),"rb") as f_p:
+       subj_dic = pickle.load(f_p, encoding='latin1')
+    
+    #p_file = open("subjective_lexicon_dic.p","rb")
+    #subj_dic = pickle.load(p_file)
     # print(emo_dic)
-    p_file.close()
+    #p_file.close()
     # num strongsubj words, number of weak subj words, pos pri words, num of neg pri words, 
     # generally more pos or neg, generally more strong or weak
     phrase_data = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
@@ -85,7 +94,7 @@ def score_subj(text):
                     word_data[3] -= 1
         else:
             continue;
-        # print(word_data)
+        cprint(word_data)
         for i in word_data:
             i = sign(i)
         for i in range(0,4):
