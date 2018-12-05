@@ -129,27 +129,27 @@ def clean_text (text):
 # is different from
 def process_data(csv_file):
     load_pos_neg()
-	reader = csv.reader(csv_file)
-	for idx,row in enumerate(reader):
-		if idx == 0:
-			continue
+    reader = csv.reader(csv_file)
+    for idx,row in enumerate(reader):
+        if idx == 0:
+            continue
 		
-		cleaned_text = clean_text(row[2])
-		phraseId = int(row[0])
-		ids.append(phraseId)
-		print(phraseId)
+        cleaned_text = clean_text(row[2])
+        phraseId = int(row[0])
+        ids.append(phraseId)
+        #print(phraseId)
         
-		emo_vector = score_emo(cleaned_text, emo_dic)
-		subj_vector = score_subj(cleaned_text, subj_dic)
+        #emo_vector = score_emo(cleaned_text, emo_dic)
+        #subj_vector = score_subj(cleaned_text, subj_dic)
         pos_neg_vector = score_pos_neg(cleaned_text.split())
 
-		#total_vector = []
-		#total_vector.extend(emo_vector)
-		#total_vector.extend(subj_vector)
-		
-		#data_emo.append(total_vector)
+        total_vector = []
+        #total_vector.extend(emo_vector)
+        #total_vector.extend(subj_vector)
+        		
+        #data_emo.append(total_vector)
         data_pos_neg.append(pos_neg_vector)
-        data_tf.append([cleaned_text])
+        #data_tf.append([cleaned_text])
 
 process_data(csv_file)
 
