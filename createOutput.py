@@ -96,21 +96,36 @@ with open(os.path.join(this_directory,'subjective_lexicon_dic.p'),"rb") as f_p:
 
 
 
-def vote(tf_res,emo_res,ngram_res):
+def vote(tf_res, emo_res, ngram_res, pos_neg_res):
+
     result_votes = []
     for i in range(0,len(emo_res)):
-        # if all are different
-        if tf_res[i] != emo_res[i] and tf_res[i] != ngram_res[i] and emo_res[i] != ngram_res[i]:
+        votes = {}
+        votes[0]=0
+        votes[1]=0
+        votes[2]=0
+        votes[3]=0
+        votes[4]=0
+        
+        # whatever number tf_res voted for 
+        votes[tf_res[i]] += 1
+        votes[emo_res[i]] += 1
+        votes[ngram_res[i]] += 1
+        votes[pos_neg_res[i]] += 1
+        
+        most_votes=0
+        most_popular = 0
+        for key,val in votes.items():
+            max_votes = max(val, most_votes)
+            most_popular = key
+            
+        # everyone voted on something different
+        if max_votes == 1:
             result_votes.append(tf_res[i])
-        # if tf and emo res are in agreement (or all in agreement)
-        elif tf_res[i] == emo_res[i]:
-            result_votes.append(emo_res[i])
-        # if tf and ngram are in agreement
-        elif tf_res[i] == ngram_res[i]:
-            result_votes.append(ngram_res[i])
-        # if emo and ngram are in agreement
-    else:
-            result_votes.append(ngram_res[i])
+        else: 
+            result_votes.append(most_popular)
+        
+
     return result_votes
 
 # cleans the test data 
