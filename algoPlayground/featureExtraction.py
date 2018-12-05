@@ -28,8 +28,6 @@ remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 dataset = []
 data_target = []
 
-Longest_Only = pickle.load( open( os.path.join(this_directory,"Longest_Only"), "rb" ) )
-
 def clean_text (text):
     text = text.translate(remove_punctuation_map).lower()
     stop_words = set(stopwords.words('english')) 
