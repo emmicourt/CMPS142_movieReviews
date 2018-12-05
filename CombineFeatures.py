@@ -61,10 +61,8 @@ if __name__ == "__main__":
     # open file
     csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
     
-    
     reader = csv.reader(csv_file)
-    for idx,row in enumerate(reader):
-        
+    for idx,row in enumerate(reader):    
         # skip col headers
         if idx == 0:
             continue
