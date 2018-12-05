@@ -85,28 +85,18 @@ def score_subj(text):
                     word_data[3] -= 1
         else:
             continue;
-        print(word_data)
+        # print(word_data)
         for i in word_data:
             i = sign(i)
         for i in range(0,4):
             phrase_data[i] += word_data[i]
         phrase_data[4]+= word_data[0]-word_data[1]
         phrase_data[5]+= word_data[2]-word_data[3]
-    print(phrase_data)
+    # print(phrase_data)
     phrase_data[4] = sign(phrase_data[4])
     phrase_data[5] = sign(phrase_data[5])
     return phrase_data
 # this function goes through the csv line by line and sorts calls the necessary
 # functions to sort the data
 
-if __name__ == "__main__":
-    # print(score_subj("foul"))
-    # open file
-    # csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
 
-    # # call sortData
-    # sortData(csv_file)
-    # print(Data_by_Emo)
-    # # pickle files
-    # with open(os.path.join(this_directory,"Data_by_Emo"),'wb') as out:
-    #     pickle.dump(Data_by_Emo,out)

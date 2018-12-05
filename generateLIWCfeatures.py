@@ -15,6 +15,7 @@ and the key is a list of lists, the nested lists contain 20 different LIWC ratin
 LIWC_dict = {}
 LIWC_vectors = []
 LIWC = []
+flag = 0 
 
 import nltk
 import os
@@ -23,9 +24,15 @@ import re
 import datetime
 nltk.download('punkt')
 
-
-
 def score_LIWC(sentence):
+    global flag
+    global LIWC_dict
+    if flag == 0:
+        this_directory = os.getcwd()
+        with open(os.path.join(this_directory,"LIWC_dict"),"rb") as f_p:
+            LIWC_dict = pickle.load(f_p)
+        flag = 1
+
     LIWC_scores = {}
     ret_LIWC = []
     
