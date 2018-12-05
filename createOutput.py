@@ -31,7 +31,7 @@ remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 clf_tf = pickle.load( open( os.path.join(this_directory,"clf_tf"), "rb" ) )
 clf_ngram = pickle.load( open( os.path.join(this_directory,"clf_ngram"), "rb" ) )
 clf_emo = pickle.load( open( os.path.join(this_directory,"clf_emo"), "rb" ) )
-clf_pos_neg = pickle( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
+clf_pos_neg = pickle.load( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
 
 ids = []
 data_tf = [] 
@@ -72,8 +72,7 @@ def clean_text (text):
 def process_data(csv_file):
 	reader = csv.reader(csv_file)
 	for idx,row in enumerate(reader):
-		
-        if idx == 0:
+		if idx == 0:
 			continue
 		
 		cleaned_text = clean_text(row[2])

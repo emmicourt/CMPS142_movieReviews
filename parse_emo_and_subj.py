@@ -43,7 +43,7 @@ def score_emo(text):
     for word in text.split(' '):
         num_words += 1
         if word in emo_dic.keys():
-            print(word)
+            # print(word)
             phrase_data[0] += emo_dic[word]['anticipation']
             phrase_data[1] += emo_dic[word]['joy']
             phrase_data[2] += emo_dic[word]['negative']
@@ -94,7 +94,7 @@ def score_subj(text):
                     word_data[3] -= 1
         else:
             continue;
-        cprint(word_data)
+        print(word_data)
         for i in word_data:
             i = sign(i)
         for i in range(0,4):
