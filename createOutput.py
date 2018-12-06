@@ -120,17 +120,17 @@ def vote(tf_res, emo_res, ngram_res, pos_neg_res):
         most_popular = 0
         for key,val in votes.items():
             # if max_votes changes
-            if(max_votes != max(val, most_votes)):
-                max_votes = max(val, most_votes)
+            if(most_votes != max(val, most_votes)):
+                most_votes = max(val, most_votes)
                 most_popular = key
             
         print(votes)
-        age = input()
         # everyone voted on something different
-        if max_votes == 1:
+        if most_votes == 1:
             result_votes.append(tf_res[i])
         else: 
             result_votes.append(most_popular)
+
     return result_votes
 
 # cleans the test data 
@@ -181,16 +181,16 @@ emo = clf_emo.predict(data_emo)
 pos_neg = clf_pos_neg.predict(data_pos_neg)
 
 
-print(len(tf))
-print(len(ngram))
-print(len(emo))
-print(len(pos_neg))
-
 predictions = vote(tf, emo, ngram, pos_neg)
 
-print(predictions)
+# Create output file: 
+f = open("output.csv","w+")
+f.write("PhraseId, Sentiment\n")
 
+for i in range(len(predictions)):
+	f.write("%d,%d\n" % (ids[i], predictions[i]))
 
+f.close()
 
 
 
