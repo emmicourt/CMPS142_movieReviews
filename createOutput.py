@@ -107,7 +107,7 @@ def vote(tf_res, emo_res, ngram_res, pos_neg_res):
         votes[3]=0
         votes[4]=0
         
-        # whatever number tf_res voted for 
+        # whatever number they voted for 
         votes[tf_res[i]] += 1
         votes[emo_res[i]] += 1
         votes[ngram_res[i]] += 1
