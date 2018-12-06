@@ -119,9 +119,13 @@ def vote(tf_res, emo_res, ngram_res, pos_neg_res):
         most_votes=0
         most_popular = 0
         for key,val in votes.items():
-            max_votes = max(val, most_votes)
-            most_popular = key
+            # if max_votes changes
+            if(max_votes != max(val, most_votes)):
+                max_votes = max(val, most_votes)
+                most_popular = key
             
+        print(votes)
+        age = input()
         # everyone voted on something different
         if max_votes == 1:
             result_votes.append(tf_res[i])
