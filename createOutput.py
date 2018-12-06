@@ -18,9 +18,7 @@ import os, sys
 from parse_emo_and_subj import score_emo, score_subj
 
 this_directory = os.getcwd()
-#csv_file = open(os.path.join(this_directory,"test.csv"),"rt")
-csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
-
+csv_file = open(os.path.join(this_directory,"testset_1.csv"),"rt")
 
 #Initialize text cleaning modules
 lemma = nltk.wordnet.WordNetLemmatizer()
@@ -33,6 +31,12 @@ clf_tf = pickle.load( open( os.path.join(this_directory,"clf_tf"), "rb" ) )
 clf_ngram = pickle.load( open( os.path.join(this_directory,"clf_ngram"), "rb" ) )
 clf_emo = pickle.load( open( os.path.join(this_directory,"clf_emo"), "rb" ) )
 clf_pos_neg = pickle.load( open( os.path.join(this_directory,"clf_pos_neg"), "rb" ) )
+
+count_vect = pickle.load( open( os.path.join(this_directory,"count_vect"), "rb" ) )
+count_vect_ngram = pickle.load( open( os.path.join(this_directory,"count_vect_ngram"), "rb" ) )
+
+tf_transformer = pickle.load( open( os.path.join(this_directory,"tf_transformer"), "rb" ) )
+tf_transformer_ngram = pickle.load( open( os.path.join(this_directory,"tf_transformer_ngram"), "rb" ) )
 
 ids = []
 data_tf = [] 
@@ -95,7 +99,6 @@ with open(os.path.join(this_directory,'subjective_lexicon_dic.p'),"rb") as f_p:
 	f_p.close()
 
 
-
 def vote(tf_res, emo_res, ngram_res, pos_neg_res):
 
     result_votes = []
@@ -124,21 +127,19 @@ def vote(tf_res, emo_res, ngram_res, pos_neg_res):
             result_votes.append(tf_res[i])
         else: 
             result_votes.append(most_popular)
-        
-
     return result_votes
 
 # cleans the test data 
 def clean_text (text):
-    text = text.translate(remove_punctuation_map).lower()
-    stop_words = set(stopwords.words('english')) 
-    word_tokens = word_tokenize(text) 
-    filtered_sentence = [w for w in word_tokens if not w in stop_words] 
-    filtered_sentence = [lemma.lemmatize(word.lower()) 
-        for word in filtered_sentence if word.isalpha()]
-    space = ' '
-    sentence = space.join(filtered_sentence)
-    return sentence
+	text = text.translate(remove_punctuation_map).lower()
+	stop_words = set(stopwords.words('english')) 
+	word_tokens = word_tokenize(text) 
+	filtered_sentence = [w for w in word_tokens if not w in stop_words] 
+	filtered_sentence = [lemma.lemmatize(word.lower()) 
+		for word in filtered_sentence if word.isalpha()]
+	space = ' '
+	sentence = space.join(filtered_sentence)
+	return sentence
 
 # this takes in the test.csv file, cleans text of each instance and puts into appropriate vector lisr
 # is different from
@@ -152,39 +153,34 @@ def process_data(csv_file):
         cleaned_text = clean_text(row[2])
         phraseId = int(row[0])
         ids.append(phraseId)
-        #print(phraseId)
         
-        #emo_vector = score_emo(cleaned_text, emo_dic)
-        #subj_vector = score_subj(cleaned_text, subj_dic)
+        emo_vector = score_emo(cleaned_text, emo_dic)
         pos_neg_vector = score_pos_neg(cleaned_text.split())
 
-        total_vector = []
-        #total_vector.extend(emo_vector)
-        #total_vector.extend(subj_vector)
-        		
-        #data_emo.append(total_vector)
+        data_emo.append(emo_vector)
         data_pos_neg.append(pos_neg_vector)
-        #data_tf.append([cleaned_text])
+        data_tf.append(cleaned_text)
 
 process_data(csv_file)
 
-#count_vect = CountVectorizer()
-#intput_tf  = count_vect.fit_transform(data_tf)
+# creating vectors 
+intput_tf  = count_vect.transform(data_tf)
+test_tfidf = tf_transformer.transform(intput_tf)
 
-#tf_transformer = TfidfTransformer()
-#test_tfidf = tf_transformer.fit_transform(intput_tf)
-
-#count_vect_ngram = CountVectorizer(ngram_range=(2, 2))
-#input_ngram =  count_vect_ngram.fit_transform(data_tf)
-
-#ngram_tfidf = tf_transformer.fit_transform(input_ngram)
-
+input_ngram =  count_vect_ngram.transform(data_tf)
+ngram_tfidf = tf_transformer_ngram.transform(input_ngram)
 
 # create array of predicted values  
-#tf = clf_tf.predict(test_tfidf.toarray())
-#ngram = clf_ngram.predict(ngram_tfidf.toarray())
-#emo = clf_emo.predict(data_emo)
+tf = clf_tf.predict(test_tfidf)
+ngram = clf_ngram.predict(ngram_tfidf)
+emo = clf_emo.predict(data_emo)
 pos_neg = clf_pos_neg.predict(data_pos_neg)
+
+
+predictions = vote(tf, emo, ngram, pos_neg)
+
+print(predictions)
+
 
 
 

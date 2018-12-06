@@ -61,11 +61,22 @@ data_train_ngram =  count_vect_ngram.fit_transform(dataset)
 # takes data from prior two lines and creates an actual dictionary and then normalize 
 tf_transformer = TfidfTransformer()
 data_train_tf = tf_transformer.fit_transform(data_train)
-data_train_tf_ngram = tf_transformer.fit_transform(data_train_ngram)
+
+tf_transformer_ngram = TfidfTransformer()
+data_train_tf_ngram = tf_transformer_ngram.fit_transform(data_train_ngram)
 
 # pickle files
-with open(os.path.join(this_directory,"data_set"),'wb') as out:
-    pickle.dump(dataset, out)
+with open(os.path.join(this_directory,"tf_transformer"),'wb') as out:
+    pickle.dump(tf_transformer, out)
+
+with open(os.path.join(this_directory,"tf_transformer_ngram"),'wb') as out:
+    pickle.dump(tf_transformer_ngram, out)
+
+with open(os.path.join(this_directory,"count_vect"),'wb') as out:
+    pickle.dump(count_vect, out)
+
+with open(os.path.join(this_directory,"count_vect_ngram"),'wb') as out:
+    pickle.dump(count_vect_ngram, out)
 
 with open(os.path.join(this_directory,"data_train_tf"),'wb') as out:
     pickle.dump(data_train_tf, out)
