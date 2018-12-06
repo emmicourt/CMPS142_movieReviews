@@ -34,13 +34,11 @@ def isEmpty(x):
 #   removing stopwords 
 def clean_text (text):
     text = text.translate(remove_punctuation_map).lower()
-    stop_words = set(stopwords.words('english')) 
     word_tokens = word_tokenize(text) 
-    filtered_sentence = [w for w in word_tokens if not w in stop_words] 
-    filtered_sentence = [lemma.lemmatize(word.lower()) 
-        for word in filtered_sentence if word.isalpha()]
+    lemmatized_sentence = [lemma.lemmatize(word.lower()) 
+        for word in word_tokens if word.isalpha()]
     space = ' '
-    sentence = space.join(filtered_sentence)
+    sentence = space.join(lemmatized_sentence)
     return sentence
 
 
@@ -88,7 +86,6 @@ def parse_file(file):
 
     for i,row in enumerate(z):
         z[i][2] = clean_text(row[2])
-        print(z[i])
         
     return numpy.array(z)
 
@@ -101,7 +98,6 @@ def parse_pickle(top_commun_path):
 def main(*argv):
     # set args
     args=argv[0]
-    print(args)
     # for i in range(1,len(args)):
         # train_data = parse_pickle(args[0])
         # print train_data
