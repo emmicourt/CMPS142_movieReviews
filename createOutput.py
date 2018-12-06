@@ -177,6 +177,11 @@ emo = clf_emo.predict(data_emo)
 pos_neg = clf_pos_neg.predict(data_pos_neg)
 
 
+print(len(tf))
+print(len(ngram))
+print(len(emo))
+print(len(pos_neg))
+
 predictions = vote(tf, emo, ngram, pos_neg)
 
 print(predictions)
