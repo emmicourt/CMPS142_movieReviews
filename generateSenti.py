@@ -18,7 +18,7 @@ nltk.download('punkt')
 
 pos_score = []
 neg_score = []
-
+senti = {}
 
 
 #Initialize text cleaning modules
@@ -41,18 +41,13 @@ def clean_text (text):
     sentence = space.join(lemmatized_sentence)
     return sentence
 
-def load_pos_neg():
-    global pos_words
-    global neg_words
-    this_directory = os.getcwd()
-    with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
-        pos_words = pickle.load(f_p, encoding='latin1')
-   
-    with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
-       neg_words = pickle.load(f_p, encoding='latin1')
+
 
 def load_senti():
-    
+    global senti
+    this_directory = os.getcwd()
+    with open(os.path.join(this_directory,"Senti_dict"),"rb") as f_p:
+        senti = pickle.load(f_p, encoding='latin1')
 
 # treturns a vector or positive and negative
 def score_pos_neg(sentence):
@@ -68,18 +63,11 @@ def score_pos_neg(sentence):
 # this main function is used for developer purposes to see how quick the thingy
 # works 
 if __name__ == "__main__":
-    pos_neg_vectors = []
+    senti_vectors = []
     this_directory = os.getcwd()
     
-    with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
-       pos_words = pickle.load(f_p, encoding='latin1')
+    load_senti()
        
-    with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
-       neg_words = pickle.load(f_p, encoding='latin1')
-       
-    
-    print(pos_words[5])
-    print(neg_words[5])
     # open file
     csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
     reader = csv.reader(csv_file)

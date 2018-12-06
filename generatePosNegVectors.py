@@ -19,6 +19,10 @@ nltk.download('punkt')
 pos_score = []
 neg_score = []
 
+pos_words = []
+neg_words = []
+senti = {}
+
 
 
 #Initialize text cleaning modules
@@ -44,6 +48,8 @@ def clean_text (text):
 def load_pos_neg():
     global pos_words
     global neg_words
+    global senti
+    
     this_directory = os.getcwd()
     with open(os.path.join(this_directory,"positive_words"),"rb") as f_p:
         pos_words = pickle.load(f_p, encoding='latin1')
@@ -51,16 +57,23 @@ def load_pos_neg():
     with open(os.path.join(this_directory,"negative_words"),"rb") as f_p:
        neg_words = pickle.load(f_p, encoding='latin1')
 
+    this_directory = os.getcwd()
+    with open(os.path.join(this_directory,"Senti_dict"),"rb") as f_p:
+        senti = pickle.load(f_p, encoding='latin1')
+
 # treturns a vector or positive and negative
 def score_pos_neg(sentence):
     pos_score = 0
     neg_score = 0
+    senti_score = 0
     
     for word in sentence:
         if word in pos_words:
             pos_score +=1
         if word in neg_words:
             neg_score +=1
+        if word in senti:
+            senti_score += float(senti[word])
             
     p_n_ratio = 0
     n_p_ratio = 0
@@ -77,7 +90,7 @@ def score_pos_neg(sentence):
         p_n_ratio = pos_score/neg_score
         n_p_ratio = neg_score/pos_score
     
-    return [pos_score, neg_score, p_n_ratio, n_p_ratio]
+    return [pos_score, neg_score, p_n_ratio, n_p_ratio, senti_score]
 
 
 # this main function is used for developer purposes to see how quick the thingy
