@@ -4,6 +4,9 @@
 Created on Wed Nov 21 12:48:41 2018
 
 @author: miaaltieri
+
+This script analyzes the positive and negative sentiments of an instances and
+produces the appropriate vector
 """
 
 import os
@@ -24,7 +27,6 @@ neg_words = []
 senti = {}
 
 
-
 #Initialize text cleaning modules
 remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 stemmer = nltk.stem.porter.PorterStemmer()
@@ -35,7 +37,6 @@ lemma = nltk.wordnet.WordNetLemmatizer()
 #   putting everything to lowercase
 #   removing punctation
 #   lemmatizing
-#   removing stopwords 
 def clean_text (text):
     text = text.translate(remove_punctuation_map).lower()
     word_tokens = word_tokenize(text) 
@@ -45,6 +46,7 @@ def clean_text (text):
     sentence = space.join(lemmatized_sentence)
     return sentence
 
+# loads the necessary dicitonaries to for this script
 def load_pos_neg():
     global pos_words
     global neg_words
@@ -61,7 +63,7 @@ def load_pos_neg():
     with open(os.path.join(this_directory,"Senti_dict"),"rb") as f_p:
         senti = pickle.load(f_p, encoding='latin1')
 
-# treturns a vector or positive and negative
+# returns a vector of positive and negative ratings along with the sentiment
 def score_pos_neg(sentence):
     pos_score = 0
     neg_score = 0
@@ -93,24 +95,18 @@ def score_pos_neg(sentence):
     return [pos_score, neg_score, p_n_ratio, n_p_ratio, senti_score]
 
 
-# this main function is used for developer purposes to see how quick the thingy
-# works 
 if __name__ == "__main__":
     pos_neg_vectors = []
+    
+    # load in the necessay dictionaries 
     this_directory = os.getcwd()
-    
     load_pos_neg()
-    
-    print(pos_words[5])
-    print(neg_words[5])
+
     # open file
     csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
     reader = csv.reader(csv_file)
         
-    count = 0
-    print(datetime.datetime.now())
     for idx,row in enumerate(reader):    
-        count+=1
         # skip col headers
         if idx == 0:
             continue
@@ -123,9 +119,6 @@ if __name__ == "__main__":
         res_row = [vect,rating]
         pos_neg_vectors.append(res_row)
         
-        if count%1010 == 0 :
-            print(vect, rating)
-            print(count/1010,"% done")
-    
+
     with open(os.path.join(this_directory,"pos_neg_vectors"),'wb') as out:
         pickle.dump(pos_neg_vectors,out)

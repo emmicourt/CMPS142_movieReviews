@@ -4,6 +4,9 @@
 Created on Wed Nov 21 12:48:41 2018
 
 @author: miaaltieri
+
+this creates a feature vector of length one for setiment ratings, this ended 
+up getting moved into generatePosNegVectors.py
 """
 
 import os

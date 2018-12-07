@@ -4,6 +4,9 @@
 Created on Wed Nov 21 12:48:41 2018
 
 @author: miaaltieri
+
+This script creates feature vectors that rates an instances liklhood to belong
+to a rating category
 """
 
 import os
@@ -18,13 +21,8 @@ nltk.download('punkt')
 
 # key: rating ; value: text
 text_dict = {}
+
 COSINE_FAIL = -1
-
-
-
-
-
-
 
 remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 stemmer = nltk.stem.porter.PorterStemmer()
@@ -39,7 +37,6 @@ stemmer = nltk.stem.porter.PorterStemmer()
 #   putting everything to lowercase
 #   removing punctation
 #   lemmatizing
-#   removing stopwords 
 def clean_text (text):
     text = text.translate(remove_punctuation_map).lower()
     word_tokens = word_tokenize(text) 
@@ -50,22 +47,22 @@ def clean_text (text):
     return sentence
 
 
-
 def stem_tokens(tokens):
     return [stemmer.stem(item) for item in tokens]
 
-'''remove punctuation, lowercase, stem'''
+# normalizes text
 def normalize(text):
     return stem_tokens(nltk.word_tokenize(text.lower().translate(remove_punctuation_map)))
 
 vectorizer = TfidfVectorizer(tokenizer=normalize, stop_words='english')
 
+# computes the cosine similarity of one text to another
 def cosine_sim(text1, text2):
     tfidf = vectorizer.fit_transform([text1, text2])
     return ((tfidf * tfidf.T).A)[0,1]
 
 
-# this includes all LIWC category calculations in our LIWC vector
+# this populates the necessary dictionaries for the script
 def populateTextDict():
     print('populating the dict....')
     Data_by_Rating = None
@@ -79,8 +76,7 @@ def populateTextDict():
         for sentence in text_list:
             text_dict[rating]+=' '+sentence
 
-            
-
+# generates the feature vector
 def score_entropy(sentence):
     if text_dict == {}:
         populateTextDict()
@@ -92,8 +88,6 @@ def score_entropy(sentence):
 
     return entropy_vect
 
-# this main function is used for developer purposes to see how quick the thingy
-# works 
 if __name__ == "__main__":
     entropy_vectors = []
     this_directory = os.getcwd()
@@ -103,13 +97,9 @@ if __name__ == "__main__":
     reader = csv.reader(csv_file)
         
     count = 0
-    print(datetime.datetime.now())
     
 
     for idx,row in enumerate(reader):    
-        count+=1
-        if count%8 != 0:
-            continue
         # skip col headers
         if idx == 0:
             continue
@@ -122,9 +112,7 @@ if __name__ == "__main__":
         res_row = [e,rating]
         entropy_vectors.append(res_row)
         
-        if count%1010 == 0 :
-            print(e, rating)
-            print(count/1010,"% done")
+
     
     with open(os.path.join(this_directory,"entropy_vectors_complete"),'wb') as out:
         pickle.dump(entropy_vectors,out)

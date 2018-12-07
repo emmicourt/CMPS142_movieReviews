@@ -4,6 +4,10 @@
 Created on Tue Nov 27 12:52:35 2018
 
 @author: miaaltieri
+
+this code translates the traditional LIWC dictionary into a pythonic LIWC 
+dictionary
+
 """
 import os
 import pickle
@@ -34,18 +38,17 @@ mapping = {}
 *355    achieve*
 *356    leisure*
 """
-important_LIWC = ['20','121','122','125','126','127','128','129','130','132','133','136','137','138','139','140','143','250','355','356']
+important_LIWC = ['20','121','122','125','126','127','128','129','130','132',
+                  '133','136','137','138','139','140','143','250','355','356']
 
 # open file
 this_directory = os.getcwd()
-LIWCLoc = this_directory +'/CleanedData/Data_by_Rating'
-
-# go through line by line
 input_file = open('LIWC2007.txt')
+
+# go through original dictionary line by line
 try:
     for i, line in enumerate(input_file):
         tokens = line.split()
-        # print(line)
         if(len(tokens) > 0):
             
             # when the line starts with a number then we add that entry to our
@@ -81,8 +84,11 @@ try:
         
 finally:
     input_file.close()
-    
-    """
+   
+# this commented out code handles the errors within the LIWC dictionary, they
+# are commented out becasue they relate to categories that we are not using
+# comment back in if need be
+"""
 # handling errors with word 'kind' 
 key = mapping['131']
 if 'kind' not in result_dic[key]:
@@ -124,12 +130,10 @@ if 'like' not in result_dic[key]:
 print(result_dic['anger'])
 
 
+# saving the pythonic LIWC dictionary
 this_directory = os.getcwd()
 with open(os.path.join(this_directory,"LIWC_dict"),'wb') as out:
     pickle.dump(result_dic,out)
 
-"""   
-for key,val in result_dic.items():
-    print(key,val)
-"""
+
 

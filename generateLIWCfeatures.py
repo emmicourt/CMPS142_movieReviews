@@ -4,6 +4,9 @@
 Created on Wed Nov 21 12:48:41 2018
 
 @author: miaaltieri
+
+This script generates a feature vector where the entries for a vector are the 
+LIWC ratings of the instance
 """
 
 
@@ -24,6 +27,7 @@ import re
 import datetime
 nltk.download('punkt')
 
+# scores the LIWC rating of a sentence
 def score_LIWC(sentence):
     global flag
     global LIWC_dict
@@ -89,24 +93,14 @@ if __name__ == "__main__":
     with open(os.path.join(this_directory,"LIWC_dict"),"rb") as f_p:
         LIWC_dict = pickle.load(f_p)
     
-    total_calcs = len(Longest_Only)
-    one_percent = int(total_calcs/100)
-    count = 0
-    print(one_percent)
     # go through Data_by Rating, this outer loop grabs a list of all the text
     # associated with a rating
-    print(datetime.datetime.now())
     for row in Longest_Only:
         rating = row[3]
         sentence = row[2]
         # LIWC ratings and appends that to our LIWC_vectors
         LIWC_vector = computeLIWCvector(sentence)
-        count += 1
-        if count%one_percent == 0 :
-            print(LIWC_vector)
-            print(count/one_percent,"% done")
-            print(datetime.datetime.now())
-            
+
         res_row = [LIWC_vector,rating]
         LIWC_vectors.append(res_row)
         
