@@ -1,0 +1,24 @@
+Find documentation here: https://scikit-learn.org/stable/modules/model_evaluation.html
+from sklearn metrics: 
+
+Accuracy_score: 0.6104337159700481
+
+Classification report 
+              precision    recall  f1-score  
+
+           0       0.83      0.09      0.16
+           1       0.70      0.33      0.44
+           2       0.60      0.98      0.74
+           3       0.64      0.23      0.34 
+           4       0.87      0.03      0.06
+
+   micro avg       0.61      0.61      0.61
+   macro avg       0.73      0.33      0.35
+weighted avg       0.65      0.61      0.54 
+
+Confusion matrix idk why it is so big 
+[[  447  1574  2849    44     0]
+ [   85  6214 12541   210     0]
+ [    4   913 54508   457     3]
+ [    2   171 17436  5326    25]
+ [    1    22  3996  2224   190]]
