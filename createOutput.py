@@ -14,6 +14,7 @@ import csv
 import string
 import pickle
 import os, sys
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 from parse_emo_and_subj import score_emo, score_subj
 
@@ -37,6 +38,8 @@ count_vect_ngram = pickle.load( open( os.path.join(this_directory,"count_vect_ng
 
 tf_transformer = pickle.load( open( os.path.join(this_directory,"tf_transformer"), "rb" ) )
 tf_transformer_ngram = pickle.load( open( os.path.join(this_directory,"tf_transformer_ngram"), "rb" ) )
+
+data_target = pickle.load( open( os.path.join(this_directory,"data_target"), "rb" ) )
 
 ids = []
 data_tf = [] 
@@ -123,8 +126,7 @@ def vote(tf_res, emo_res, ngram_res, pos_neg_res):
             if(most_votes != max(val, most_votes)):
                 most_votes = max(val, most_votes)
                 most_popular = key
-            
-        print(votes)
+
         # everyone voted on something different
         if most_votes == 1:
             result_votes.append(tf_res[i])

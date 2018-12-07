@@ -103,7 +103,7 @@ if __name__ == "__main__":
     
 
     # use the results from the pos neg classifier 
-    for row in longest_sentence:
+    for row in longest_sentence.tolist():
         cleaned_text = clean_text(row[2])
         pos_neg_vector = score_pos_neg(cleaned_text.split())
         data_pos_neg.append(pos_neg_vector)
@@ -112,21 +112,21 @@ if __name__ == "__main__":
     pos_neg_rating = clf_pos_neg.predict(data_pos_neg)
     
     # set up all the longest sentences
-    for i,row in enumerate(longest_sentence):
-        print(type(row[1]))
-        age = input()
-        sentence_id = row[1]
-        phrase_id = row[0]
-        
+    for i,row in enumerate(longest_sentence.tolist()):
+        try:
+            sentence_id = int(row[1])
+        except:
+            continue
+        sentence_id = int(row[1])
+        phrase_id = int(row[0])
         prediction = pos_neg_rating[i]
-        parent_info[prediction] = [phrase_id, sentence_id, prediction]
+        parent_info[sentence_id] = [phrase_id, sentence_id, prediction]
         
     # now actually go through
     reader = csv.reader(csv_file)
     for idx,row in enumerate(reader):
         if idx == 0:
             continue
-        print("=============",row)
         phrase_id = int(row[0])
         sentence_id = int(row[1])
         cleaned_text = clean_text(row[2])

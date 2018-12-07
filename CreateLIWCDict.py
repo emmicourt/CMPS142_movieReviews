@@ -121,6 +121,7 @@ if 'like' not in result_dic[key]:
     result_dic[key].append('like')
     
 
+print(result_dic['anger'])
 
 
 this_directory = os.getcwd()

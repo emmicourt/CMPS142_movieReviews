@@ -27,12 +27,6 @@ stemmer = nltk.stem.porter.PorterStemmer()
 #   putting everything to lowercase
 #   removing punctation
 #   lemmatizing
-#   removing stopwords 
-# this cleans the text by:
-#   putting everything to lowercase
-#   removing punctation
-#   lemmatizing
-#   removing stopwords 
 def clean_text (text):
     text = text.translate(remove_punctuation_map).lower()
     word_tokens = word_tokenize(text) 
@@ -43,20 +37,14 @@ def clean_text (text):
     return sentence
 
 if __name__ == "__main__":
-
     features = [] 
+    
+    # opening correct files 
     this_directory = os.getcwd()
     csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
         
     with open(os.path.join(this_directory,"LIWC_dict"),"rb") as f_p:
         LIWC_dict = pickle.load(f_p)
-    
-
-    one_percent = 120
-    count = 0
-    # go through Data_by Rating, this outer loop grabs a list of all the text
-    # associated with a rating
-    print(datetime.datetime.now())
     
     # open file
     csv_file = open(os.path.join(this_directory,"train.csv"),"rt")
@@ -75,18 +63,15 @@ if __name__ == "__main__":
         emo_vector = score_emo(sentence)
         subj_vector = score_subj(sentence)
         
+        # adding these to our enitre feature vector
         total_vector = []
         total_vector.extend(LIWC_vector)
         total_vector.extend(emo_vector)
         total_vector.extend(subj_vector)
         
-        count += 1
-        if count%one_percent == 0 :
-            print(count/one_percent,"% done")
-            print(datetime.datetime.now())
-            
         res_row = [total_vector,rating]
         features.append(res_row)
         
+    # dumping the output
     with open(os.path.join(this_directory,"LIWC_vector"),'wb') as out:
         pickle.dump(features,out)
