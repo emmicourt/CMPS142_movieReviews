@@ -76,7 +76,6 @@ logEmo = log.fit(emo1_train, emo2_train)
 #.score(logEmo) # == 0.4929411764705882
 
 logpn = log.fit(pn1_train, pn2_train)
-print(logpn)
  #logon = log.fit(“put training set ”)
 
 
