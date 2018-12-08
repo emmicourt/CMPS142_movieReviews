@@ -76,8 +76,7 @@ def gather_emo_info(phraseId, text, label):
 # functions to sort the data
 def sortData(csv_file):
     reader = csv.reader(csv_file)
-    for idx,row in enumerate(reader):
-        # skip col headers
+    for idx,row in enumerate(reader): 
         if idx == 0:
             continue
 
